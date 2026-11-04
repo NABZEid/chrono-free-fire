@@ -1,0 +1,740 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Chrono Free Fire</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: poster-style, left-aligned hero with a backwards-spinning chronograph dial on the right.
+   Sharp corners, hairline grids, mono labels. The one bold move is the scan-striped headline plus the dial. */
+:root {
+  --bg: #0a0b0d;
+  --panel: #111317;
+  --panel-2: #181b20;
+  --line: #262a31;
+  --mute: #868b95;
+  --dim: #b6bac2;
+  --fg: #f2f3f4;
+  --btn-bg: #f2f3f4;
+  --btn-fg: #0a0b0d;
+  --f-display: 'Big Shoulders Display', 'Arial Narrow', Impact, sans-serif;
+  --f-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --f-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f1f2f4; --panel: #e7e9ec; --panel-2: #dcdfe3; --line: #c9cdd3;
+    --mute: #5a5f68; --dim: #33373e; --fg: #0b0c0e; --btn-bg: #0b0c0e; --btn-fg: #f1f2f4;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f1f2f4; --panel: #e7e9ec; --panel-2: #dcdfe3; --line: #c9cdd3;
+  --mute: #5a5f68; --dim: #33373e; --fg: #0b0c0e; --btn-bg: #0b0c0e; --btn-fg: #f1f2f4;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 400 16px/1.6 var(--f-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+body::before {
+  content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+  z-index: 30; background: var(--bg);
+}
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+section[id] { scroll-margin-top: 76px; }
+
+.wrap {
+  width: 100%; max-width: 1240px; margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.mono { font-family: var(--f-mono); }
+
+/* Header */
+.top {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 60px; }
+.brand {
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  font: 800 1.55rem/1 var(--f-display); letter-spacing: .1em; text-transform: uppercase;
+}
+.brand svg { width: 24px; height: 24px; }
+.brand .mh { transform-origin: 12px 12px; transform-box: view-box; animation: ccw 5s linear infinite; }
+@keyframes ccw { to { transform: rotate(-360deg); } }
+.nav { display: flex; align-items: center; gap: 28px; }
+.nav a {
+  font: 500 .72rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--mute); text-decoration: none; transition: color .2s;
+}
+.nav a:hover { color: var(--fg); }
+.nav a.nav-cta { color: var(--fg); border: 1px solid var(--fg); padding: 10px 14px; }
+.nav a.nav-cta:hover { background: var(--fg); color: var(--bg); }
+@media (max-width: 760px) { .nav a:not(.nav-cta) { display: none; } }
+
+/* Buttons */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 17px 24px; border: 1px solid var(--fg); background: transparent; color: var(--fg);
+  font: 600 .8rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer; overflow: hidden; isolation: isolate; transition: color .3s;
+}
+.btn::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--fg);
+  transform: translateY(101%); transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+}
+.btn:hover { color: var(--bg); }
+.btn:hover::before { transform: none; }
+.btn svg { width: 16px; height: 16px; flex: none; transition: transform .3s; }
+.btn:hover svg { transform: translateX(4px); }
+.btn--solid { background: var(--btn-bg); color: var(--btn-fg); }
+.btn--solid::before { background: var(--bg); }
+.btn--solid:hover { color: var(--fg); }
+
+/* Hero */
+.hero { position: relative; padding-block: clamp(40px, 7vw, 96px); border-bottom: 1px solid var(--line); }
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .55;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse at 72% 45%, #000 0%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 72% 45%, #000 0%, transparent 72%);
+}
+.hero .wrap { position: relative; z-index: 1; }
+.hero-grid {
+  display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr);
+  gap: clamp(28px, 5vw, 72px); align-items: center;
+}
+@media (max-width: 900px) { .hero-grid { grid-template-columns: minmax(0, 1fr); } }
+.kicker {
+  display: flex; flex-wrap: wrap; gap: 8px 14px;
+  font: 500 .72rem/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mute);
+}
+.kicker b { font-weight: 500; color: var(--fg); }
+h1 {
+  margin: 22px 0 0;
+  font: 900 clamp(3.2rem, 10.5vw, 8.2rem)/.86 var(--f-display);
+  text-transform: uppercase; letter-spacing: -.005em;
+}
+h1 .ln { display: block; white-space: nowrap; padding-block: .03em; animation: rise .85s cubic-bezier(.2, .7, .2, 1) both; }
+h1 .ln.b {
+  background: repeating-linear-gradient(0deg, var(--fg) 0 4px, transparent 4px 7px);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  animation: rise .85s cubic-bezier(.2, .7, .2, 1) .14s both, scan 1.1s linear infinite;
+}
+@keyframes rise { from { opacity: .2; transform: translateY(.18em); } to { opacity: 1; transform: none; } }
+@keyframes scan { to { background-position: 0 -7px; } }
+.lead { margin: 26px 0 0; max-width: 46ch; color: var(--dim); font-size: clamp(1rem, 1.5vw, 1.15rem); }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.specs {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0;
+  margin: 44px 0 0; padding: 0; max-width: 520px;
+}
+.specs div { padding: 14px 16px 0 0; border-top: 1px solid var(--line); }
+.specs dt { font: 500 .66rem/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.specs dd { margin: 10px 0 0; font: 800 1.5rem/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase; }
+.dial { position: relative; width: 100%; max-width: 560px; aspect-ratio: 1; justify-self: end; }
+.dial canvas { display: block; width: 100%; height: 100%; }
+@media (max-width: 900px) { .dial { justify-self: center; } }
+
+/* Marquee */
+.band { border-bottom: 1px solid var(--line); overflow: hidden; }
+.band-track { display: flex; width: max-content; animation: slide 46s linear infinite; }
+.band-track:hover { animation-play-state: paused; }
+.grp { display: flex; align-items: center; flex: none; }
+.grp span {
+  padding: 18px 26px; white-space: nowrap;
+  font: 800 clamp(1.6rem, 4vw, 3rem)/1 var(--f-display); letter-spacing: .04em; text-transform: uppercase;
+}
+.grp span:nth-of-type(even) { color: var(--mute); }
+.grp i { font: 500 1rem/1 var(--f-mono); color: var(--mute); font-style: normal; }
+@keyframes slide { to { transform: translateX(-50%); } }
+
+/* Sections */
+.sec { padding-block: clamp(56px, 8vw, 112px); border-bottom: 1px solid var(--line); }
+.sec-head {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
+  gap: 20px clamp(20px, 4vw, 56px); margin-bottom: clamp(32px, 5vw, 64px); align-items: start;
+}
+@media (max-width: 760px) { .sec-head { grid-template-columns: minmax(0, 1fr); } }
+.eyebrow { font: 500 .72rem/1.4 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mute); padding-top: .9em; }
+h2 {
+  margin: 0; font: 800 clamp(2.3rem, 6vw, 4.6rem)/.92 var(--f-display);
+  text-transform: uppercase; text-wrap: balance;
+}
+h3 { margin: 0; font: 800 clamp(1.5rem, 2.6vw, 2.1rem)/1 var(--f-display); text-transform: uppercase; letter-spacing: .02em; }
+p { margin: 0; }
+
+/* Feature grid */
+.grid {
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 1px;
+  background: var(--line); border: 1px solid var(--line);
+}
+.card {
+  position: relative; display: flex; flex-direction: column; gap: 14px; min-height: 230px;
+  padding: clamp(20px, 3vw, 36px); background: var(--panel); transition: background .3s;
+}
+.card::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--fg);
+  transition: width .5s cubic-bezier(.2, .7, .2, 1);
+}
+.card:hover { background: var(--panel-2); }
+.card:hover::after { width: 100%; }
+.card:nth-child(1) { grid-column: span 7; }
+.card:nth-child(2) { grid-column: span 5; }
+.card:nth-child(3) { grid-column: span 5; }
+.card:nth-child(4) { grid-column: span 7; }
+.card .lbl { font: 500 .7rem/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.card p { color: var(--dim); max-width: 44ch; margin-top: auto; }
+@media (max-width: 760px) { .card:nth-child(n) { grid-column: 1 / -1; min-height: 0; } .card p { margin-top: 0; } }
+
+/* Steps */
+.steps { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(28px, 5vw, 72px); }
+@media (max-width: 860px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+.prog { align-self: start; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 92px); }
+@media (max-width: 860px) { .prog { position: static; } }
+.prog-num { font: 900 clamp(4rem, 10vw, 7rem)/.85 var(--f-display); letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.prog-bar { height: 3px; background: var(--line); margin-top: 18px; overflow: hidden; }
+.prog-bar i { display: block; height: 100%; background: var(--fg); transform-origin: left; transform: scaleX(0); transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
+.prog p { margin-top: 16px; color: var(--dim); max-width: 34ch; }
+.reset {
+  margin-top: 18px; padding: 0; border: 0; background: none; color: var(--mute); cursor: pointer;
+  font: 500 .72rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; text-decoration: underline; text-underline-offset: 4px;
+}
+.reset:hover { color: var(--fg); }
+.list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+.step { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 20px; padding-block: 26px; border-top: 1px solid var(--line); }
+.chk {
+  position: relative; width: 48px; height: 48px; padding: 0; flex: none; cursor: pointer;
+  border: 1px solid var(--line); background: var(--panel); color: var(--fg);
+  font: 500 .9rem/1 var(--f-mono); transition: background .25s, color .25s, border-color .25s;
+}
+.chk:hover { border-color: var(--fg); }
+.chk .n, .chk svg { position: absolute; inset: 0; margin: auto; }
+.chk .n { display: grid; place-items: center; }
+.chk svg { width: 20px; height: 20px; opacity: 0; transform: scale(.6); transition: opacity .2s, transform .25s; }
+.step.done .chk { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.step.done .chk .n { opacity: 0; }
+.step.done .chk svg { opacity: 1; transform: none; }
+.step h3 { transition: color .25s; }
+.step.done h3 { color: var(--mute); }
+.step p { margin-top: 10px; color: var(--dim); max-width: 52ch; }
+.step p a { font-family: var(--f-mono); font-size: .85em; color: var(--fg); text-underline-offset: 4px; word-break: break-word; }
+.step p code, .panel p code { font: 500 .85em var(--f-mono); color: var(--fg); word-break: break-word; }
+
+/* Download panels */
+.dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+@media (max-width: 860px) { .dl { grid-template-columns: minmax(0, 1fr); } }
+.panel { display: flex; flex-direction: column; gap: 18px; padding: clamp(22px, 3.4vw, 44px); background: var(--panel); min-width: 0; }
+.panel h3 { font-size: clamp(2rem, 4.4vw, 3.2rem); line-height: .95; }
+.panel .lbl { font: 500 .7rem/1 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--mute); }
+.panel p { color: var(--dim); max-width: 44ch; }
+.url-row { display: flex; align-items: stretch; gap: 0; border: 1px solid var(--line); background: var(--bg); min-width: 0; }
+.url { flex: 1; min-width: 0; padding: 12px 14px; font: 400 .74rem/1.5 var(--f-mono); color: var(--dim); word-break: break-all; }
+.copy {
+  flex: none; padding: 0 16px; border: 0; border-left: 1px solid var(--line); background: none; color: var(--fg); cursor: pointer;
+  font: 500 .68rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; transition: background .2s, color .2s;
+}
+.copy:hover { background: var(--fg); color: var(--bg); }
+.panel .btn { margin-top: auto; align-self: flex-start; }
+.panel .url-row { margin-top: 4px; }
+.panel .btn { margin-top: 6px; }
+
+/* FAQ */
+.faq { border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; cursor: pointer; list-style: none;
+  padding-block: 22px; font: 600 clamp(1.05rem, 2vw, 1.3rem)/1.3 var(--f-body);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--dim); }
+.pm { position: relative; width: 18px; height: 18px; flex: none; }
+.pm::before, .pm::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; margin-top: -1px; background: currentColor; transition: transform .3s; }
+.pm::after { transform: rotate(90deg); }
+.faq details[open] .pm::after { transform: rotate(0deg); }
+.ans { padding: 0 0 24px; color: var(--dim); max-width: 60ch; animation: fade .4s ease both; }
+@keyframes fade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* Footer */
+.foot { padding-block: clamp(40px, 6vw, 72px); overflow: hidden; }
+.mark {
+  margin: 0 0 32px; user-select: none; white-space: nowrap;
+  font: 900 clamp(4.5rem, 24vw, 20rem)/.82 var(--f-display); text-transform: uppercase; letter-spacing: .01em;
+  background: repeating-linear-gradient(0deg, var(--fg) 0 4px, transparent 4px 7px);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  padding-block: .03em;
+}
+.foot-row { display: flex; flex-wrap: wrap; gap: 20px 40px; justify-content: space-between; align-items: flex-start; }
+.disc { max-width: 62ch; font-size: .85rem; color: var(--mute); }
+.flinks { display: flex; flex-wrap: wrap; gap: 14px 24px; }
+.flinks a { font: 500 .72rem/1 var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); text-decoration: none; }
+.flinks a:hover { color: var(--fg); }
+
+/* Scroll reveal: starts partly visible, never hidden */
+.will { opacity: .35; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); transition-delay: calc(var(--i, 0) * 80ms); }
+.will.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  html { scroll-behavior: auto; }
+  .will { opacity: 1; transform: none; }
+}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#atas" aria-label="Chrono, ke atas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <line class="mh" x1="12" y1="12" x2="12" y2="4.5" stroke-linecap="square"/>
+        <circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+      </svg>
+      Chrono
+    </a>
+    <nav class="nav" aria-label="Navigasi">
+      <a href="#fitur">Fitur</a>
+      <a href="#pasang">Cara pasang</a>
+      <a href="#faq">FAQ</a>
+      <a class="nav-cta" href="#unduh">Unduh</a>
+    </nav>
+  </div>
+</header>
+
+<main id="atas">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker"><b>Chrono</b><span>/</span><span>Free Fire versi lama</span><span>/</span><span>Android</span></div>
+          <h1><span class="ln a">Free Fire</span><span class="ln b">Yang dulu.</span></h1>
+          <p class="lead">Chrono membawa pengalaman Free Fire versi lama ke Android kamu. Unduh APK-nya, verifikasi akun, lalu main.</p>
+          <div class="cta">
+            <a class="btn btn--solid" href="https://www.mediafire.com/file/o7m0h897ebrl4l2/KIPAS_ANDROID.apk/file" target="_blank" rel="noopener">
+              Unduh APK
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 2v9M4 7.5l4 4 4-4M3 14h10" stroke-linecap="square"/></svg>
+            </a>
+            <a class="btn" href="https://chronoprojects.com/verify" target="_blank" rel="noopener">
+              Verifikasi akun
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke-linecap="square"/></svg>
+            </a>
+          </div>
+          <dl class="specs">
+            <div><dt>Platform</dt><dd>Android</dd></div>
+            <div><dt>Biaya</dt><dd>Gratis</dd></div>
+            <div><dt>Format</dt><dd>APK</dd></div>
+          </dl>
+        </div>
+        <div class="dial">
+          <canvas id="dial" role="img" aria-label="Jam kronograf yang jarumnya berputar mundur"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="band" aria-hidden="true">
+    <div class="band-track">
+      <div class="grp">
+        <span>Chrono</span><i>/</i><span>Free Fire versi lama</span><i>/</i><span>Gratis</span><i>/</i><span>Android</span><i>/</i><span>Verifikasi akun</span><i>/</i>
+        <span>Chrono</span><i>/</i><span>Free Fire versi lama</span><i>/</i><span>Gratis</span><i>/</i><span>Android</span><i>/</i><span>Verifikasi akun</span><i>/</i>
+      </div>
+    </div>
+  </div>
+
+  <section class="sec" id="fitur">
+    <div class="wrap">
+      <div class="sec-head will">
+        <div class="eyebrow">Isi paket</div>
+        <h2>Yang kamu dapat dari Chrono</h2>
+      </div>
+      <div class="grid">
+        <article class="card will" style="--i:0">
+          <span class="lbl">Versi</span>
+          <h3>Rasa Free Fire yang lama</h3>
+          <p>Untuk kamu yang rindu tampilan dan suasana Free Fire dari dulu. Chrono membawanya ke Android.</p>
+        </article>
+        <article class="card will" style="--i:1">
+          <span class="lbl">Biaya</span>
+          <h3>Gratis diunduh</h3>
+          <p>Tidak ada biaya untuk mengunduh APK Chrono.</p>
+        </article>
+        <article class="card will" style="--i:2">
+          <span class="lbl">Platform</span>
+          <h3>Khusus Android</h3>
+          <p>Berkas berformat APK. Pasang langsung dari penyimpanan HP kamu.</p>
+        </article>
+        <article class="card will" style="--i:3">
+          <span class="lbl">Akun</span>
+          <h3>Verifikasi lewat web</h3>
+          <p>Akun Chrono diverifikasi di chronoprojects.com/verify, cukup dari browser HP atau komputer.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="pasang">
+    <div class="wrap">
+      <div class="sec-head will">
+        <div class="eyebrow">Cara pasang</div>
+        <h2>Lima langkah sampai main</h2>
+      </div>
+      <div class="steps">
+        <div class="prog will">
+          <div class="prog-num" id="count" aria-live="polite">0/5</div>
+          <div class="prog-bar"><i id="bar"></i></div>
+          <p id="status">Ketuk kotak di samping langkah untuk menandainya selesai.</p>
+          <button class="reset" id="reset" type="button">Ulangi dari awal</button>
+        </div>
+        <ol class="list">
+          <li class="step will">
+            <button class="chk" type="button" aria-pressed="false" aria-label="Tandai langkah 1 selesai"><span class="n">1</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="square"/></svg></button>
+            <div>
+              <h3>Unduh APK</h3>
+              <p>Ketuk <a href="#unduh">Unduh APK</a>, lalu tekan Download di halaman MediaFire. Berkas <code>KIPAS_ANDROID.apk</code> tersimpan di folder Unduhan.</p>
+            </div>
+          </li>
+          <li class="step will">
+            <button class="chk" type="button" aria-pressed="false" aria-label="Tandai langkah 2 selesai"><span class="n">2</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="square"/></svg></button>
+            <div>
+              <h3>Izinkan pemasangan</h3>
+              <p>Jika Android menolak, buka Pengaturan lalu izinkan browser atau pengelola berkas kamu memasang aplikasi dari sumber tidak dikenal.</p>
+            </div>
+          </li>
+          <li class="step will">
+            <button class="chk" type="button" aria-pressed="false" aria-label="Tandai langkah 3 selesai"><span class="n">3</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="square"/></svg></button>
+            <div>
+              <h3>Pasang berkas</h3>
+              <p>Buka <code>KIPAS_ANDROID.apk</code> dari folder Unduhan, ketuk Pasang, dan tunggu sampai selesai.</p>
+            </div>
+          </li>
+          <li class="step will">
+            <button class="chk" type="button" aria-pressed="false" aria-label="Tandai langkah 4 selesai"><span class="n">4</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="square"/></svg></button>
+            <div>
+              <h3>Verifikasi akun</h3>
+              <p>Buka <a href="https://chronoprojects.com/verify" target="_blank" rel="noopener">chronoprojects.com/verify</a> dan ikuti langkah di halaman itu.</p>
+            </div>
+          </li>
+          <li class="step will">
+            <button class="chk" type="button" aria-pressed="false" aria-label="Tandai langkah 5 selesai"><span class="n">5</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke-linecap="square"/></svg></button>
+            <div>
+              <h3>Buka dan main</h3>
+              <p>Jalankan aplikasi yang baru dipasang dari layar utama HP kamu.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="unduh">
+    <div class="wrap">
+      <div class="sec-head will">
+        <div class="eyebrow">Unduh</div>
+        <h2>Dua tautan, semuanya di sini</h2>
+      </div>
+      <div class="dl">
+        <article class="panel will" style="--i:0">
+          <span class="lbl">APK</span>
+          <h3>Unduh Chrono</h3>
+          <p>Berkas <code>KIPAS_ANDROID.apk</code> dihosting di MediaFire. Ketuk tombol, lalu tekan Download di halaman berikutnya.</p>
+          <div class="url-row">
+            <div class="url" id="u1">https://www.mediafire.com/file/o7m0h897ebrl4l2/KIPAS_ANDROID.apk/file</div>
+            <button class="copy" type="button" data-copy="u1">Salin</button>
+          </div>
+          <a class="btn btn--solid" href="https://www.mediafire.com/file/o7m0h897ebrl4l2/KIPAS_ANDROID.apk/file" target="_blank" rel="noopener">
+            Unduh APK
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 2v9M4 7.5l4 4 4-4M3 14h10" stroke-linecap="square"/></svg>
+          </a>
+        </article>
+        <article class="panel will" style="--i:1">
+          <span class="lbl">Akun</span>
+          <h3>Verifikasi akun</h3>
+          <p>Selesaikan verifikasi akun Chrono kamu di situs Chrono Projects. Prosesnya berjalan di browser.</p>
+          <div class="url-row">
+            <div class="url" id="u2">https://chronoprojects.com/verify</div>
+            <button class="copy" type="button" data-copy="u2">Salin</button>
+          </div>
+          <a class="btn" href="https://chronoprojects.com/verify" target="_blank" rel="noopener">
+            Buka verifikasi
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 8h11M9 4l4 4-4 4" stroke-linecap="square"/></svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq">
+    <div class="wrap">
+      <div class="sec-head will">
+        <div class="eyebrow">Pertanyaan</div>
+        <h2>Sering ditanyakan</h2>
+      </div>
+      <div class="faq will">
+        <details>
+          <summary>Apakah Chrono gratis?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans">Ya. Mengunduh APK Chrono tidak dikenai biaya.</div>
+        </details>
+        <details>
+          <summary>Kenapa pemasangan ditolak Android?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans">APK dari luar Play Store butuh izin. Buka Pengaturan, cari izin pasang aplikasi dari sumber tidak dikenal, lalu aktifkan untuk browser atau pengelola berkas yang kamu pakai. Setelah selesai, matikan lagi izinnya.</div>
+        </details>
+        <details>
+          <summary>Di mana saya verifikasi akun?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans">Di chronoprojects.com/verify. Buka tautannya, lalu ikuti petunjuk di halaman itu sampai selesai.</div>
+        </details>
+        <details>
+          <summary>Unduhan gagal atau berhenti, harus bagaimana?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans">Pastikan sambungan internet stabil dan penyimpanan HP cukup. Buka tautan unduhan sekali lagi, atau coba lewat browser lain.</div>
+        </details>
+        <details>
+          <summary>Apakah halaman ini dari Garena?<span class="pm" aria-hidden="true"></span></summary>
+          <div class="ans">Bukan. Halaman ini tidak berafiliasi dengan Garena, dan Free Fire adalah merek dagang milik pemiliknya. Pasang hanya dari tombol di halaman ini, dan jangan bagikan kata sandi akunmu ke siapa pun.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="mark" aria-hidden="true">Chrono</p>
+    <div class="foot-row">
+      <p class="disc">Halaman ini tidak berafiliasi dengan, didukung, atau disponsori oleh Garena. Free Fire adalah merek dagang milik pemiliknya.</p>
+      <nav class="flinks" aria-label="Tautan footer">
+        <a href="#unduh">Unduh</a>
+        <a href="https://chronoprojects.com/verify" target="_blank" rel="noopener">Verifikasi</a>
+        <a href="#faq">FAQ</a>
+        <a href="#atas">Ke atas</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* Marquee: duplicate the group so the loop is seamless */
+  var track = document.querySelector('.band-track');
+  if (track && track.firstElementChild) {
+    var dup = track.firstElementChild.cloneNode(true);
+    dup.setAttribute('aria-hidden', 'true');
+    track.appendChild(dup);
+  }
+
+  /* Scroll reveal */
+  var wills = [].slice.call(document.querySelectorAll('.will'));
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    wills.forEach(function (el) { io.observe(el); });
+    setTimeout(function () { wills.forEach(function (el) { el.classList.add('in'); }); }, 4000);
+  } else {
+    wills.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* Copy buttons */
+  [].forEach.call(document.querySelectorAll('[data-copy]'), function (b) {
+    b.addEventListener('click', function () {
+      var el = document.getElementById(b.getAttribute('data-copy'));
+      var txt = el.textContent.trim();
+      var old = b.textContent;
+      function ok() { b.textContent = 'Disalin'; setTimeout(function () { b.textContent = old; }, 1600); }
+      function fallback() {
+        try {
+          var r = document.createRange(); r.selectNodeContents(el);
+          var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+          if (document.execCommand('copy')) ok();
+        } catch (e) {}
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(txt).then(ok, fallback);
+      } else { fallback(); }
+    });
+  });
+
+  /* Step tracker */
+  var KEY = 'chrono-steps-done';
+  var items = [].slice.call(document.querySelectorAll('.step'));
+  var count = document.getElementById('count');
+  var bar = document.getElementById('bar');
+  var status = document.getElementById('status');
+  function readSaved() { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; } }
+  function writeSaved() {
+    try {
+      var d = [];
+      items.forEach(function (li, i) { if (li.classList.contains('done')) d.push(i); });
+      localStorage.setItem(KEY, JSON.stringify(d));
+    } catch (e) {}
+  }
+  function render() {
+    var n = items.filter(function (li) { return li.classList.contains('done'); }).length;
+    count.textContent = n + '/' + items.length;
+    bar.style.transform = 'scaleX(' + (n / items.length) + ')';
+    status.textContent = n === items.length ? 'Semua langkah selesai. Selamat bermain.' : 'Ketuk kotak di samping langkah untuk menandainya selesai.';
+  }
+  items.forEach(function (li, i) {
+    var btn = li.querySelector('.chk');
+    btn.addEventListener('click', function () {
+      var on = li.classList.toggle('done');
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+      writeSaved(); render();
+    });
+  });
+  readSaved().forEach(function (i) {
+    if (items[i]) { items[i].classList.add('done'); items[i].querySelector('.chk').setAttribute('aria-pressed', 'true'); }
+  });
+  document.getElementById('reset').addEventListener('click', function () {
+    items.forEach(function (li) { li.classList.remove('done'); li.querySelector('.chk').setAttribute('aria-pressed', 'false'); });
+    writeSaved(); render();
+  });
+  render();
+
+  /* Chronograph dial: hands spin backwards, fast at first, then settle */
+  var cv = document.getElementById('dial');
+  if (!cv || !cv.getContext) return;
+  var ctx = cv.getContext('2d');
+  var TAU = Math.PI * 2, S = 0, dpr = 1, ang = -1.1, elapsed = 12, last = 0, running = false, fc = 0;
+  var cols = {};
+  function readCols() {
+    var cs = getComputedStyle(document.documentElement);
+    function g(n, d) { return (cs.getPropertyValue(n) || '').trim() || d; }
+    cols.fg = g('--fg', '#fff'); cols.mute = g('--mute', '#888'); cols.line = g('--line', '#333');
+    cols.panel = g('--panel', '#111'); cols.bg = g('--bg', '#000');
+    cols.mono = g('--f-mono', 'monospace');
+  }
+  function size() {
+    var r = cv.getBoundingClientRect();
+    S = Math.max(160, Math.round(r.width));
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(S * dpr); cv.height = Math.round(S * dpr);
+  }
+  function pt(c, r, th) { return [c + r * Math.sin(th), c - r * Math.cos(th)]; }
+  function seg(c, r0, r1, th) {
+    var a = pt(c, r0, th), b = pt(c, r1, th);
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+  }
+  function pad(n, l) { n = String(n); while (n.length < l) n = '0' + n; return n; }
+
+  function draw() {
+    if (fc++ % 30 === 0) readCols();
+    var c = S / 2, R = S / 2 - 6;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, S, S);
+    ctx.setLineDash([]);
+    ctx.lineCap = 'butt';
+
+    // face
+    ctx.fillStyle = cols.panel; ctx.beginPath(); ctx.arc(c, c, R, 0, TAU); ctx.fill();
+    ctx.strokeStyle = cols.fg; ctx.lineWidth = 1.5; ctx.stroke();
+
+    // bezel ticks, turning slowly the other way
+    var bez = elapsed * 0.05;
+    for (var i = 0; i < 120; i++) {
+      var major = i % 10 === 0, mid = i % 5 === 0;
+      var len = major ? R * 0.075 : (mid ? R * 0.048 : R * 0.026);
+      ctx.strokeStyle = major ? cols.fg : cols.mute;
+      ctx.lineWidth = major ? 2 : 1;
+      seg(c, R * 0.965, R * 0.965 - len, i / 120 * TAU + bez);
+    }
+
+    // inner dashed ring
+    ctx.strokeStyle = cols.line; ctx.lineWidth = 1; ctx.setLineDash([2, 6]);
+    ctx.beginPath(); ctx.arc(c, c, R * 0.78, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+
+    // readout: counts down while the hand runs backwards
+    var total = (3600 - (elapsed % 3600));
+    var mm = Math.floor(total / 60), ss = Math.floor(total % 60), cs = Math.floor((total * 100) % 100);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = cols.mute; ctx.font = '500 ' + Math.max(8, Math.round(R * 0.046)) + 'px ' + cols.mono;
+    try { ctx.letterSpacing = Math.max(2, R * 0.014) + 'px'; } catch (e) {}
+    ctx.fillText('REWIND', c, c - R * 0.5);
+    try { ctx.letterSpacing = '0px'; } catch (e) {}
+    ctx.fillStyle = cols.fg; ctx.font = '500 ' + Math.max(10, Math.round(R * 0.098)) + 'px ' + cols.mono;
+    ctx.fillText(pad(mm, 2) + ':' + pad(ss, 2) + '.' + pad(cs, 2), c, c - R * 0.37);
+
+    // sub-dials
+    var subs = [[-0.47, 0.06, 5], [0.47, 0.06, 1 / 12], [0, 0.52, 0.25]];
+    subs.forEach(function (s) {
+      var sx = c + s[0] * R, sy = c + s[1] * R, sr = R * 0.19;
+      ctx.strokeStyle = cols.line; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.stroke();
+      for (var k = 0; k < 12; k++) {
+        var th = k / 12 * TAU;
+        ctx.strokeStyle = k % 3 === 0 ? cols.fg : cols.mute;
+        ctx.lineWidth = k % 3 === 0 ? 1.4 : 1;
+        var a = [sx + sr * 0.94 * Math.sin(th), sy - sr * 0.94 * Math.cos(th)];
+        var b = [sx + sr * (k % 3 === 0 ? 0.74 : 0.82) * Math.sin(th), sy - sr * (k % 3 === 0 ? 0.74 : 0.82) * Math.cos(th)];
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      }
+      var th2 = ang * s[2];
+      ctx.strokeStyle = cols.fg; ctx.lineWidth = 1.6;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + sr * 0.72 * Math.sin(th2), sy - sr * 0.72 * Math.cos(th2)); ctx.stroke();
+      ctx.fillStyle = cols.fg; ctx.beginPath(); ctx.arc(sx, sy, 2.2, 0, TAU); ctx.fill();
+    });
+
+    // sweep trail behind the main hand
+    var steps = 36, stepA = 0.022;
+    ctx.fillStyle = cols.fg;
+    for (var j = 0; j < steps; j++) {
+      ctx.globalAlpha = (1 - j / steps) * 0.2;
+      var a0 = ang + j * stepA - Math.PI / 2, a1 = ang + (j + 1) * stepA - Math.PI / 2;
+      ctx.beginPath(); ctx.moveTo(c, c); ctx.arc(c, c, R * 0.74, a0, a1 + 0.002); ctx.closePath(); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // main hand
+    var tip = pt(c, R * 0.8, ang), tail = pt(c, -R * 0.14, ang);
+    ctx.strokeStyle = cols.fg; ctx.lineWidth = Math.max(2, R * 0.012);
+    ctx.beginPath(); ctx.moveTo(tail[0], tail[1]); ctx.lineTo(tip[0], tip[1]); ctx.stroke();
+    ctx.fillStyle = cols.fg; ctx.beginPath(); ctx.arc(tail[0], tail[1], R * 0.022, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.arc(c, c, R * 0.04, 0, TAU); ctx.fill();
+    ctx.fillStyle = cols.bg; ctx.beginPath(); ctx.arc(c, c, R * 0.016, 0, TAU); ctx.fill();
+  }
+
+  function frame(now) {
+    if (!running) return;
+    if (!last) last = now;
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    elapsed += dt;
+    var w = -(TAU / 8) - (TAU * 2.6) * Math.exp(-(elapsed - 12) / 1.1);
+    ang += w * dt;
+    draw();
+    requestAnimationFrame(frame);
+  }
+  function start() { if (running || reduce) return; running = true; last = 0; requestAnimationFrame(frame); }
+  function stop() { running = false; }
+
+  readCols(); size(); draw();
+  if ('ResizeObserver' in window) {
+    new ResizeObserver(function () { size(); draw(); }).observe(cv.parentNode);
+  } else { window.addEventListener('resize', function () { size(); draw(); }); }
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(function () { readCols(); draw(); }); }
+
+  if (!reduce) {
+    elapsed = 12;
+    // restart the intro spin from a visible resting pose
+    var introStart = 12;
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (es) { es[0].isIntersecting ? start() : stop(); }, { threshold: 0.05 }).observe(cv);
+    } else { start(); }
+  }
+})();
+</script>
+
+</body></html>
